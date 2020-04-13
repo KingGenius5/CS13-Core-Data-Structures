@@ -48,11 +48,20 @@ def encode(number, base):
     # Handle unsigned numbers only for now
     assert number >= 0, 'number is negative: {}'.format(number)
     # TODO: Encode number in binary (base 2)
-    # ...
     # TODO: Encode number in hexadecimal (base 16)
-    # ...
     # TODO: Encode number in any base (2 up to 36)
-    # ...
+    encoded_val = ""
+    
+    while number > 0:
+        # the divmod method is great as it can take two numbers and returns a tuple consisting of the quotient and remainder
+        number, remainder = divmod(number, base)
+        
+        if remainder >= 10:
+            encoded_val += chr(remainder + 87)
+        else:
+            encoded_val += str(remainder)
+
+    return encoded_val[::-1]
 
 
 def convert(digits, base1, base2):
