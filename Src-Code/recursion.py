@@ -17,6 +17,15 @@ def factorial_iterative(n):
     pass
     # once implemented, change factorial (above) to call factorial_iterative
     # to verify that your iterative implementation passes all tests
+    value = 1
+    #base case
+    if n == 0 or n == 1: # would have preferred parameter to be 'num's but that's okay
+        return 1
+    
+    for i in range(2, n + 1):
+        value *= i
+
+    return value
 
 
 def factorial_recursive(n):
