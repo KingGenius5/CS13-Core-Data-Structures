@@ -18,11 +18,24 @@ def decode(digits, base):
     # Handle up to base 36 [0-9a-z]
     assert 2 <= base <= 36, 'base is out of range: {}'.format(base)
     # TODO: Decode digits from binary (base 2)
-    # ...
     # TODO: Decode digits from hexadecimal (base 16)
-    # ...
     # TODO: Decode digits from any base (2 up to 36)
-    # ...
+    digits = digits[::-1]
+    dc_val = 0 # the decoded value
+
+    for exp, digit in enumerate(digits):
+        power_val = base ** exp
+
+        if digit.isalpha():
+            digit = digit.lower()
+            digit = ord(digit) - 97 + 10
+        else:
+            digit = int(digit)
+
+        dc_val += digit * power_val
+
+    return dc_val
+    
 
 
 def encode(number, base):
