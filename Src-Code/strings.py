@@ -40,6 +40,20 @@ def find_all_indexes(text, pattern):
     assert isinstance(text, str), 'text is not a string: {}'.format(text)
     assert isinstance(pattern, str), 'pattern is not a string: {}'.format(text)
     # TODO: Implement find_all_indexes here (iteratively and/or recursively)
+    occurrs = []
+    num = 0
+    
+    while num < len(text):
+        index = find_index(text,pattern, num)
+
+        if index is not None:
+            occurrs.append(index)
+            num = index
+        
+        num += 1
+        index = None
+            
+    return occurrs
 
 
 def test_string_algorithms(text, pattern):
