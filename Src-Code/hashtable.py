@@ -25,13 +25,18 @@ class HashTable(object):
 
     def load_factor(self):
         """Return the load factor, the ratio of number of entries to buckets.
-        Best and worst case running time: ??? under what conditions? [TODO]"""
+        Best and worst case running time: ??? under what conditions?
+        Best case is O(1) assuming we know size and length of buckets already. 
+        If we have to calculate the size or the buckets then it becomes O(b) + O(n) where b = buckets, n = items 
+        [TODO]"""
         # TODO: Calculate load factor
-        # return ...
+        return self.size / len(self.buckets)
 
     def keys(self):
         """Return a list of all keys in this hash table.
-        Best and worst case running time: ??? under what conditions? [TODO]"""
+        Best and worst case running time: ??? under what conditions? 
+        Both O(n) where n is all items in buckets must iterate over entire hashtable.
+        [TODO]"""
         # Collect all keys in each of the buckets
         all_keys = []
         for bucket in self.buckets:
@@ -41,7 +46,9 @@ class HashTable(object):
 
     def values(self):
         """Return a list of all values in this hash table.
-        Best and worst case running time: ??? under what conditions? [TODO]"""
+        Best and worst case running time: ??? under what conditions?
+        Both O(n) as you must access every item in order to return values. 
+        [TODO]"""
         # Collect all values in each of the buckets
         all_values = []
         for bucket in self.buckets:
@@ -51,7 +58,8 @@ class HashTable(object):
 
     def items(self):
         """Return a list of all entries (key-value pairs) in this hash table.
-        Best and worst case running time: ??? under what conditions? [TODO]"""
+        Best and worst case running time: ??? under what conditions? Both O(n) since you iterate over every item in hashtable.
+        [TODO]"""
         # Collect all pairs of key-value entries in each of the buckets
         all_items = []
         for bucket in self.buckets:
@@ -60,7 +68,9 @@ class HashTable(object):
 
     def length(self):
         """Return the number of key-value entries by traversing its buckets.
-        Best and worst case running time: ??? under what conditions? [TODO]"""
+        Best and worst case running time: ??? under what conditions? 
+        Both O(n), must iterate over every item in the hashtable.
+        [TODO]"""
         # Count number of key-value entries in each of the buckets
         item_count = 0
         for bucket in self.buckets:
@@ -71,8 +81,8 @@ class HashTable(object):
 
     def contains(self, key):
         """Return True if this hash table contains the given key, or False.
-        Best case running time: ??? under what conditions? [TODO]
-        Worst case running time: ??? under what conditions? [TODO]"""
+        Best case running time: ??? under what conditions? O(1) no collision for given hash value. [TODO]
+        Worst case running time: ??? under what conditions? O(l) load factor is high and has multiple collsions to find value. [TODO]"""
         # Find the bucket the given key belongs in
         index = self._bucket_index(key)
         bucket = self.buckets[index]
@@ -82,8 +92,8 @@ class HashTable(object):
 
     def get(self, key):
         """Return the value associated with the given key, or raise KeyError.
-        Best case running time: ??? under what conditions? [TODO]
-        Worst case running time: ??? under what conditions? [TODO]"""
+        Best case running time: ??? under what conditions? O(1) hash goes directly at index. [TODO]
+        Worst case running time: ??? under what conditions? O(l) if key is not in table and load factor is high. [TODO]"""
         # Find the bucket the given key belongs in
         index = self._bucket_index(key)
         bucket = self.buckets[index]
@@ -99,8 +109,8 @@ class HashTable(object):
 
     def set(self, key, value):
         """Insert or update the given key with its associated value.
-        Best case running time: ??? under what conditions? [TODO]
-        Worst case running time: ??? under what conditions? [TODO]"""
+        Best case running time: ??? under what conditions? O(1) if hash function marks an empty index. [TODO]
+        Worst case running time: ??? under what conditions? O(l) if table has a higher load factor and collsions occur. [TODO]"""
         # Find the bucket the given key belongs in
         index = self._bucket_index(key)
         bucket = self.buckets[index]
@@ -112,16 +122,19 @@ class HashTable(object):
             # Remove the old key-value entry from the bucket first
             bucket.delete(entry)
         # Insert the new key-value entry into the bucket in either case
+        else:
+            self.size +=1
+
         bucket.append((key, value))
         # TODO: Check if the load factor exceeds a threshold such as 0.75
-        # ...
         # TODO: If so, automatically resize to reduce the load factor
-        # ...
+        if self.load_factor() > 0.75:
+            self._resize()
 
     def delete(self, key):
         """Delete the given key and its associated value, or raise KeyError.
-        Best case running time: ??? under what conditions? [TODO]
-        Worst case running time: ??? under what conditions? [TODO]"""
+        Best case running time: ??? under what conditions? O(1) hash index only contains associated key. [TODO]
+        Worst case running time: ??? under what conditions? O(l) if item is not in table, load factor is high. [TODO]"""
         # Find the bucket the given key belongs in
         index = self._bucket_index(key)
         bucket = self.buckets[index]
@@ -130,6 +143,7 @@ class HashTable(object):
         if entry is not None:  # Found
             # Remove the key-value entry from the bucket
             bucket.delete(entry)
+            self.size -=1
         else:  # Not found
             raise KeyError('Key not found: {}'.format(key))
 
@@ -137,8 +151,8 @@ class HashTable(object):
         """Resize this hash table's buckets and rehash all key-value entries.
         Should be called automatically when load factor exceeds a threshold
         such as 0.75 after an insertion (when set is called with a new key).
-        Best and worst case running time: ??? under what conditions? [TODO]
-        Best and worst case space usage: ??? what uses this memory? [TODO]"""
+        Best and worst case running time: ??? under what conditions? O(n) all items must be iterated over twice and inserted into table. [TODO]
+        Best and worst case space usage: ??? what uses this memory? O(n) where N represents the temporary list data needs to be stored. [TODO]"""
         # If unspecified, choose new size dynamically based on current size
         if new_size is None:
             new_size = len(self.buckets) * 2  # Double size
@@ -146,12 +160,17 @@ class HashTable(object):
         elif new_size is 0:
             new_size = len(self.buckets) / 2  # Half size
         # TODO: Get a list to temporarily hold all current key-value entries
-        # ...
         # TODO: Create a new list of new_size total empty linked list buckets
-        # ...
         # TODO: Insert each key-value entry into the new list of buckets,
         # which will rehash them into a new bucket index based on the new size
-        # ...
+        wait_list = list()
+        for bucket in self.buckets:
+            for key, value in bucket.items():
+                wait_list.append((key, value))
+
+        self.buckets = [LinkedList() for i in range(new_size)]
+        for item in wait_list:
+            self.set(item[0],item[1])
 
 
 def test_hash_table():
