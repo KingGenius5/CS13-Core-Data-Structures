@@ -77,29 +77,43 @@ class ArrayStack(object):
     def is_empty(self):
         """Return True if this stack is empty, or False otherwise."""
         # TODO: Check if empty
+        if len(self.list) == 0:
+            return True
+        
+        return False
 
     def length(self):
         """Return the number of items in this stack."""
         # TODO: Count number of items
+        return len(self.list)
 
     def push(self, item):
         """Insert the given item on the top of this stack.
-        Running time: O(???) – Why? [TODO]"""
+        Running time: O(???) – Why? O(1) as item is always inserted at end of the list. [TODO]"""
         # TODO: Insert given item
+        self.list.append(item)
 
     def peek(self):
         """Return the item on the top of this stack without removing it,
         or None if this stack is empty."""
         # TODO: Return top item, if any
+        if self.is_empty():
+            return None
+        else:
+            return self.list[len(self.list)-1]
 
     def pop(self):
         """Remove and return the item on the top of this stack,
         or raise ValueError if this stack is empty.
-        Running time: O(???) – Why? [TODO]"""
+        Running time: O(???) – Why? O(1) depending on size of array, you can easily access and delete an element. [TODO]"""
         # TODO: Remove and return top item, if any
+        if self.is_empty():
+            raise ValueError('Again, stack is empty!')
+        else:
+            return self.list.pop()
 
 
 # Implement LinkedStack and ArrayStack above, then change the assignment below
 # to use each of your Stack implementations to verify they each pass all tests
-Stack = LinkedStack
-# Stack = ArrayStack
+# Stack = LinkedStack
+Stack = ArrayStack
